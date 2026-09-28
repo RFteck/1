@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>minha princesa</title>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ameixa:#3b1f52; --ameixa2:#2a1440; --uva:#5e3a86;
+  --musgo:#1f4d3a; --musgo2:#123326; --sage:#7fae94;
+  --creme:#f1e8da; --lilas:#c9b3e6; --tinta:#2a1636;
+}
+*{box-sizing:border-box;margin:0}
+html,body{min-height:100%}
+body{
+  font-family:'Newsreader',Georgia,serif;color:var(--creme);background:var(--ameixa2);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:9vh 20px 60px;overflow-x:hidden;
+}
+/* fundo: camadas de papel recortado, roxo e verde */
+.papel-fundo{position:fixed;inset:0;width:100%;height:100%;z-index:-2;pointer-events:none}
+.papel-fundo path{filter:drop-shadow(0 -5px 0 rgba(0,0,0,.22))}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.22;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+h1{font-family:'Young Serif',Georgia,serif;font-weight:400;font-size:clamp(2.6rem,9vw,5rem);text-align:center;color:var(--creme);text-shadow:4px 4px 0 var(--ameixa);animation:desce .9s cubic-bezier(.3,1.3,.5,1) both}
+.risco{display:block;width:min(260px,55vw);margin:6px auto 0;animation:desce .9s .25s both}
+@keyframes desce{from{opacity:0;transform:translateY(-24px)}}
+
+/* presentes */
+.presentes{display:flex;gap:clamp(10px,4vw,56px);margin-top:9vh;flex-wrap:wrap;justify-content:center;align-items:flex-end}
+.presente{
+  width:clamp(105px,26vw,175px);aspect-ratio:1;border:0;background:none;cursor:pointer;
+  transform:rotate(var(--t));filter:drop-shadow(6px 7px 0 rgba(0,0,0,.35));
+  animation:pula .8s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--i)*.18s + .4s);
+  transition:transform .35s cubic-bezier(.3,1.6,.5,1),filter .6s;
+}
+@keyframes pula{from{opacity:0;transform:translateY(50px) scale(.6) rotate(var(--t))}}
+.presente svg{width:100%;height:100%;display:block;overflow:visible}
+.presente .tampa{transition:transform .35s cubic-bezier(.3,1.8,.5,1);transform-origin:60px 50px}
+.presente:hover .tampa{transform:translateY(-8px) rotate(-4deg)}
+.presente:hover{transform:rotate(0) scale(1.06)}
+.presente:focus-visible{outline:3px solid var(--creme);outline-offset:8px;border-radius:12px}
+/* já aberto: escurece, mas continua clicável */
+.presente.visto{filter:brightness(.38) saturate(.5) drop-shadow(6px 7px 0 rgba(0,0,0,.35))}
+.presente.visto:hover{filter:brightness(.62) saturate(.7) drop-shadow(6px 7px 0 rgba(0,0,0,.35))}
+
+/* telas */
+.tela{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(20,8,30,.82);z-index:10;overflow:auto}
+.tela.aberta{display:flex;animation:fade .3s}
+@keyframes fade{from{opacity:0}}
+.caixa{
+  position:relative;width:min(940px,100%);margin:auto;padding:clamp(28px,5vw,54px);border-radius:22px;
+  background:var(--painel,var(--ameixa));
+  box-shadow:0 0 0 6px var(--painel,var(--ameixa)),0 0 0 9px var(--creme),10px 12px 0 9px rgba(0,0,0,.4);
+  transform:rotate(-.4deg);
+}
+#t2 .caixa{--painel:var(--musgo);transform:rotate(.4deg)}
+.caixa::before{content:"";position:absolute;inset:11px;border:2px dashed rgba(241,232,218,.55);border-radius:14px;pointer-events:none}
+.caixa::after{content:"";position:absolute;inset:0;border-radius:22px;pointer-events:none;opacity:.25;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
+.tela.aberta .caixa{animation:cai .6s cubic-bezier(.3,1.3,.5,1)}
+@keyframes cai{from{opacity:0;transform:translateY(-60px) rotate(-3deg)}}
+.tela.aberta .caixa>.corpo>*{animation:entra .6s ease both;animation-delay:calc(var(--n,0)*.13s + .3s)}
+@keyframes entra{from{opacity:0;transform:translateY(16px)}}
+.corpo{position:relative;z-index:1}
+.fechar{
+  position:absolute;top:18px;right:20px;width:40px;height:40px;border-radius:50%;cursor:pointer;z-index:6;
+  background:var(--creme);color:var(--tinta);border:0;font:400 1.5rem/1 'Young Serif',serif;box-shadow:3px 3px 0 rgba(0,0,0,.4);transition:transform .25s
+}
+.fechar:hover{transform:rotate(90deg) scale(1.08)}
+.texto{font-size:clamp(1.15rem,2.5vw,1.45rem);line-height:1.7;text-align:center}
+
+/* spotify */
+.spot{border-radius:16px;overflow:hidden;border:3px solid var(--creme);box-shadow:6px 7px 0 rgba(0,0,0,.4);background:#000;line-height:0}
+.spot iframe{width:100%;border:0;display:block}
+
+/* presente 1: texto centro-esquerda, música centro-direita */
+.duas{display:flex;align-items:center;justify-content:space-between;gap:38px;min-height:300px}
+.duas .texto{flex:1 1 50%;padding-left:2%}
+.duas .spot{flex:0 1 380px;width:100%;margin-right:2%}
+
+/* presente 2: colagem */
+.fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));grid-auto-flow:dense;gap:30px 24px;margin-top:36px;padding:8px 4px}
+.foto{
+  background:var(--creme);padding:7px 7px 26px;border-radius:3px;position:relative;cursor:zoom-in;
+  box-shadow:5px 6px 0 rgba(0,0,0,.38);transform:translateY(var(--y)) rotate(var(--r));
+  animation:solta .7s cubic-bezier(.3,1.4,.5,1) both;animation-delay:calc(var(--k)*.08s + .5s);
+  transition:transform .35s cubic-bezier(.3,1.6,.5,1);
+}
+.foto:nth-child(4n+1){grid-column:span 2;grid-row:span 2}
+.foto img{width:100%;height:100%;min-height:130px;aspect-ratio:1;object-fit:cover;display:block;background:var(--uva)}
+.foto:nth-child(4n+1) img{aspect-ratio:auto}
+.foto::before{content:"";position:absolute;top:-10px;left:50%;width:54px;height:18px;margin-left:-27px;background:rgba(201,179,230,.85);transform:rotate(calc(var(--r)*-1.5))}
+.foto:hover{transform:translateY(-6px) rotate(0) scale(1.06);z-index:3}
+@keyframes solta{from{opacity:0;transform:translateY(-60px) rotate(calc(var(--r)*4))}}
+.zoom{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;background:rgba(20,8,30,.92);cursor:zoom-out;padding:20px}
+.zoom.aberta{display:flex;animation:fade .25s}
+.zoom img{max-width:100%;max-height:92vh;border:9px solid var(--creme);border-bottom-width:34px;border-radius:3px;box-shadow:10px 12px 0 rgba(0,0,0,.5);animation:cai .45s cubic-bezier(.3,1.3,.5,1)}
+
+/* presente 3: carta */
+.carta{--W:340px;--EW:396px;--h:130px;--H:390px;position:relative;width:min(100%,560px);height:230px;margin:6px auto 0;cursor:pointer;transition:height 1.1s cubic-bezier(.5,0,.2,1) .35s}
+.carta.open{height:calc(var(--H) + 80px);cursor:default}
+.env{position:absolute;bottom:0;left:50%;width:var(--EW);height:200px;margin-left:calc(var(--EW)/-2);filter:drop-shadow(6px 7px 0 rgba(0,0,0,.35));transition:transform .35s}
+.carta:not(.open):hover .env{transform:rotate(-2deg) translateY(-5px)}
+.env>*{position:absolute;inset:0}
+.env .costas{background:var(--musgo);border-radius:6px}
+.env .frente{background:var(--creme);clip-path:polygon(0 0,50% 56%,100% 0,100% 100%,0 100%);border-radius:6px;z-index:3}
+.env .aba{background:#e2d6c3;clip-path:polygon(0 0,100% 0,50% 60%);transform-origin:top;z-index:4;transition:transform .8s cubic-bezier(.4,0,.2,1),z-index 0s .4s;border-radius:6px 6px 0 0}
+.carta.open .aba{transform:rotateX(180deg);z-index:1;background:var(--sage)}
+.selo{position:absolute;left:50%;top:44%;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;z-index:5;background:var(--ameixa);border:3px solid #52307a;display:grid;place-items:center;font-size:.9rem;color:var(--lilas);transition:opacity .4s,transform .5s}
+.carta.open .selo{opacity:0;transform:scale(1.8) rotate(40deg)}
+/* a folha fica dentro do envelope: sobe um pouco e se desdobra para cima */
+.env>.papel{inset:auto auto 14px 50%;width:var(--W);height:var(--h);margin-left:calc(var(--W)/-2);z-index:2;transition:bottom 1.1s cubic-bezier(.5,0,.2,1) .55s}
+.carta.open .env>.papel{bottom:70px}
+.fol{position:relative;width:100%;height:100%;perspective:1400px}
+.pb{position:absolute;inset:0;transform-style:preserve-3d}
+.pm,.pt{position:absolute;left:0;bottom:100%;width:100%;height:100%;transform-origin:bottom center;transform-style:preserve-3d}
+.pm{transform:translateZ(2px) rotateX(-180deg);transition:transform 1.1s cubic-bezier(.5,0,.2,1) .1s}
+.pt{transform:translateZ(4px) rotateX(-180deg);transition:transform 1.15s cubic-bezier(.5,0,.2,1) 1.15s}
+.carta.fora .pm,.carta.fora .pt{transform:translateZ(0) rotateX(0deg)}
+.face{position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;color:var(--tinta);
+  background-color:var(--creme);background-image:repeating-linear-gradient(transparent 0 33px,rgba(94,58,134,.2) 33px 34px);background-position:0 calc(var(--i)*var(--h)*-1)}
+.face.back{transform:rotateX(180deg);background:#e4d9c7}
+.pm>.face:first-child::after,.pt>.face:first-child::after{content:"";position:absolute;left:0;right:0;bottom:0;height:26px;background:linear-gradient(transparent,rgba(0,0,0,.14))}
+.tx{position:absolute;left:0;top:calc(var(--i)*var(--h)*-1);width:100%;height:calc(var(--h)*3);padding:30px 36px calc(var(--h) + 30px);display:flex;align-items:center;justify-content:center}
+.tx>div{width:100%}
+.medida{position:absolute;visibility:hidden;left:0;top:0;padding:30px 36px}
+.grande{margin-top:26px}
+#t1 .duas .texto{font-size:clamp(.98rem,1.9vw,1.12rem);line-height:1.7}
+#t1 .duas .texto p{margin:0 0 .9em}
+#t1 .duas .texto .abre{font-family:'Young Serif',serif;font-size:1.35em}
+#t1 .duas .texto .fecha{margin-bottom:0}
+#carta .texto{font-size:1rem;line-height:34px}
+#carta .texto p{margin:0 0 .6em}
+#carta .texto .abre{font-family:'Young Serif',serif;font-size:1.3rem}
+#carta .texto .fecha{margin-bottom:0}
+.rotulo{font-family:'Young Serif',Georgia,serif;font-size:clamp(1.5rem,4vw,2rem);text-align:center;color:var(--creme);text-shadow:3px 3px 0 var(--ameixa);margin:36px 0 0}
+.grande iframe{height:352px}
+
+/* presente 4: buquê */
+#t4 .caixa{--painel:var(--musgo2);transform:rotate(-.3deg)}
+#t4 .carta4{max-width:620px;margin:0 auto;text-align:center;font-size:clamp(1.02rem,2.1vw,1.2rem);line-height:1.75}
+#t4 .carta4 p{margin:0 0 1.05em}
+#t4 .carta4 .abre{font-family:'Young Serif',serif;font-size:1.35em}
+#t4 .carta4 .fecha{margin-bottom:0}
+.buque{display:block;width:min(100%,430px);margin:24px auto 0;overflow:visible;filter:drop-shadow(6px 7px 0 rgba(0,0,0,.35))}
+.flor{cursor:pointer;transform-origin:200px 338px;animation:balanca 5.5s ease-in-out infinite;animation-delay:calc(var(--k)*-.7s)}
+@keyframes balanca{0%,100%{transform:rotate(calc(var(--a)*.3deg))}50%{transform:rotate(calc(var(--a)*-.3deg - .9deg))}}
+.inc{transform-origin:200px 340px;transform:rotate(calc(var(--lean,0)*var(--w)*1deg));transition:transform .7s cubic-bezier(.3,1.3,.5,1)}
+.giro.brota{animation:brota .9s cubic-bezier(.3,1.6,.5,1)}
+@keyframes brota{from{transform:scale(.25) rotate(-35deg)}}
+#borb{pointer-events:none;transition:transform 1.6s cubic-bezier(.3,.7,.3,1)}
+.voo{animation:paira 3.4s ease-in-out infinite}
+.tela.aberta .voo{animation:paira 3.4s ease-in-out infinite,surge2 1s 2.8s both}
+@keyframes paira{50%{transform:translate(4px,-7px) rotate(6deg)}}
+@keyframes surge2{from{opacity:0}}
+.asaE,.asaD{transform-box:fill-box;animation:bate .28s ease-in-out infinite alternate}
+.asaE{transform-origin:right center}.asaD{transform-origin:left center}
+@keyframes bate{to{transform:scaleX(.3)}}
+.folha{transform-origin:200px 340px;animation:balanca 6.5s ease-in-out infinite;animation-delay:-2s}
+.talo{fill:none;stroke:#3f8a67;stroke-width:5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:0}
+.tela.aberta .talo{animation:cresce 1s ease-out both;animation-delay:calc(var(--k)*.08s + .4s)}
+@keyframes cresce{from{stroke-dashoffset:1}}
+.cabeca{transform-box:fill-box;transform-origin:center}
+.tela.aberta .cabeca{animation:desabrocha .9s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--k)*.1s + 1s)}
+@keyframes desabrocha{from{transform:scale(0) rotate(-40deg)}}
+.giro{transform-box:fill-box;transform-origin:center;transition:transform .35s cubic-bezier(.3,1.8,.5,1)}
+.flor:hover .giro{transform:scale(1.14) rotate(9deg)}
+.giro.pulsa{animation:pulsa .6s ease}
+@keyframes pulsa{40%{transform:scale(1.4) rotate(-14deg)}}
+.petala{transform-box:fill-box;transform-origin:center;pointer-events:none;animation:petala 1.5s ease-out forwards}
+@keyframes petala{to{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot))}}
+.tela.aberta .embrulho{animation:sobeB .8s cubic-bezier(.3,1.3,.5,1) both;animation-delay:.3s}
+@keyframes sobeB{from{opacity:0;transform:translateY(50px)}}
+
+@media(max-width:680px){.duas{flex-direction:column-reverse;text-align:center;gap:24px}.duas .texto{padding:0}.duas .spot{margin:0;flex-basis:auto}.foto:nth-child(4n+1){grid-column:span 1;grid-row:span 1}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01s!important;animation-delay:0s!important;transition-duration:.01s!important;transition-delay:0s!important}}
+</style>
+</head>
+<body>
+
+<svg class="papel-fundo" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true">
+  <rect width="1440" height="900" fill="#3b1f52"/>
+  <path d="M0 300C260 210 470 400 760 340C1050 280 1240 150 1440 210V900H0Z" fill="#5e3a86"/>
+  <path d="M0 470C300 380 520 560 820 500C1100 445 1260 340 1440 390V900H0Z" fill="#1f4d3a"/>
+  <path d="M0 640C260 590 520 700 820 660C1120 620 1290 540 1440 580V900H0Z" fill="#2a1440"/>
+  <path d="M0 780C300 740 560 830 860 800C1150 770 1300 720 1440 745V900H0Z" fill="#123326"/>
+</svg>
+
+<h1>minha princesa</h1>
+<svg class="risco" viewBox="0 0 260 14" aria-hidden="true"><path d="M3 8C30 1 45 13 75 7S120 2 150 8 205 12 257 5" fill="none" stroke="#c9b3e6" stroke-width="4" stroke-linecap="round"/></svg>
+
+<div class="presentes">
+  <button class="presente" data-alvo="t1" style="--i:0;--t:-4deg" aria-label="Presente 1"></button>
+  <button class="presente" data-alvo="t2" style="--i:1;--t:2deg" aria-label="Presente 2"></button>
+  <button class="presente" data-alvo="t3" style="--i:2;--t:-2deg" aria-label="Presente 3"></button>
+  <button class="presente" data-alvo="t4" style="--i:3;--t:3deg" aria-label="Presente 4"></button>
+</div>
+
+<!-- Presente 1 -->
+<div class="tela" id="t1"><div class="caixa"><button class="fechar" aria-label="Fechar">&times;</button><div class="corpo">
+  <div class="duas" style="--n:1">
+    <div class="texto">
+      <p class="abre">Amor,</p>
+      <p>Eu queria escrever exatamente oq eu sinto sem tentar deixar bonito pq a verdade é q vc já é a parte mais bonita dos meus dias.</p>
+      <p>Desde q vc apareceu tudo ficou diferente. Eu comecei a sorrir mais a esperar sua mensagem e a perceber q felicidade às vezes é só conversar com a pessoa certa. Vc virou meu lugar favorito mesmo sem perceber.</p>
+      <p>Eu amo seu jeitinho. Amo quando vc fica tímida quando dá risada quando faz cara de brava e até quando diz q tá tudo bem mas eu sei q n tá kkk. São esses detalhes q fazem eu me apaixonar mais por vc.</p>
+      <p>Com vc eu aprendi q amar n é fazer grandes coisas toda hora. É cuidar demonstrar estar presente e escolher a mesma pessoa todos os dias. E eu escolho vc.</p>
+      <p>Aqui tá a sua playlist.</p>
+      <p class="fecha">Eu sempre vou te amar do jeitinho q vc é minha princesa. Sempre vou amar um pouco mais a cada dia. 🤍</p>
+    </div>
+    <div class="spot"><iframe data-spotify="p1" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" title="Música"></iframe></div>
+  </div>
+</div></div></div>
+
+<!-- Presente 2 -->
+<div class="tela" id="t2"><div class="caixa"><button class="fechar" aria-label="Fechar">&times;</button><div class="corpo">
+  <p class="rotulo" style="--n:1;margin:0">minha galeria</p>
+  <div class="fotos" id="fotos" style="--n:2"></div>
+</div></div></div>
+
+<!-- Presente 3 -->
+<div class="tela" id="t3"><div class="caixa"><button class="fechar" aria-label="Fechar">&times;</button><div class="corpo">
+  <div class="carta" id="carta" role="button" tabindex="0" aria-label="Abrir a cartinha" style="--n:1">
+    <div class="env"><div class="costas"></div>
+      <div class="papel"><div class="fol">
+        <div class="pb" style="--i:2"><div class="face"><div class="tx texto"></div></div>
+          <div class="pm" style="--i:1"><div class="face"><div class="tx texto"></div></div><div class="face back"></div>
+            <div class="pt" style="--i:0"><div class="face"><div class="tx texto"></div></div><div class="face back"></div></div>
+          </div>
+        </div>
+      </div></div>
+      <div class="frente"></div><div class="aba"></div><div class="selo">♥</div></div>
+    <div class="texto" id="cartaTexto" hidden><p class="abre">Amor,</p><p>Eu escrevi essa carta pq tem sentimentos q merecem ficar guardados pra sempre. Talvez um dia a gente leia isso de novo e lembre de tudo q tava vivendo agora.</p><p>Quero q vc saiba q eu sou muito grato por ter vc na minha vida. Cada conversa nossa cada risada e até os momentos em silêncio são especiais pra mim. Vc faz parte dos meus dias de um jeito q eu nem consigo explicar.</p><p>Eu gosto de quem eu sou quando to com vc. Vc me traz paz me faz sorrir sem perceber e faz as coisas simples terem muito mais valor. É por isso q eu tenho tanto carinho pela gente.</p><p>Eu espero q a gente continue criando lembranças lindas. Quero viver um monte de momentos ao seu lado e guardar cada um deles no coração. Não importa se é um passeio uma foto ou só uma conversa besta. O importante pra mim é q seja com vc.</p><p>Obrigado por confiar em mim e por me deixar fazer parte da sua vida. Eu vou sempre dar o meu melhor pra cuidar da gente e fazer vc se sentir amada todos os dias.</p><p class="fecha">Sempre vou amar um pouco mais a cada dia. 🤍</p></div>
+  </div>
+  <p class="rotulo" style="--n:2">nossa playlist</p>
+  <div class="grande spot" style="--n:3"><iframe data-spotify="p3" height="352" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" title="Música de fundo"></iframe></div>
+</div></div></div>
+
+<!-- Presente 4 -->
+<div class="tela" id="t4"><div class="caixa"><button class="fechar" aria-label="Fechar">&times;</button><div class="corpo">
+  <div class="texto carta4" style="--n:1">
+    <p class="abre">Amor,</p>
+    <p>eu nem sei direito como começar isso kkk, só sei q eu queria deixar escrito um pedacinho de tudo q vc significa pra mim. Às vezes eu travo pra falar pessoalmente, então achei q num caderninho eu conseguiria colocar tudo q passa na minha cabeça.</p>
+    <p>Desde q vc entrou na minha vida, muita coisa mudou. Os dias ficaram mais leves, eu comecei a reparar mais nas coisas simples e até um "oi" seu consegue melhorar um dia inteiro meu. Pode parecer bobo, mas é verdade. Vc virou uma das minhas partes favoritas da rotina.</p>
+    <p>Eu amo o seu jeitinho. Amo quando vc fica com vergonha, quando ri de um jeito q tenta esconder, quando faz gracinha sem perceber. Mesmo sendo mais fechada, eu consigo enxergar o carinho q vc demonstra nas pequenas atitudes, e é isso q faz vc ser tão especial pra mim.</p>
+    <p>Quero q vc saiba q eu nunca vou esperar q vc mude quem vc é. Gosto de vc exatamente assim. Com seu jeitinho, com suas manias, com seus sonhos e até com seus medos. Pra mim, amar alguém também é aceitar cada detalhe dela.</p>
+    <p>Eu sei q a gente ainda tem muita coisa pra viver. Ainda quero criar um monte de lembranças com vc, tirar fotos aleatórias, rir por motivo nenhum, andar de mãos dadas, trocar cartinhas e olhar pra trás daqui um tempo pensando: "caramba, a gente conseguiu viver tudo isso junto".</p>
+    <p class="fecha">Obrigado por existir e por deixar eu fazer parte da sua vida. Talvez eu não consiga demonstrar tudo do jeito certo sempre, mas pode ter certeza q o q eu sinto é de verdade. Vc me faz querer ser uma pessoa melhor a cada dia.</p>
+  </div>
+  <svg class="buque" id="buque" viewBox="0 0 400 470" style="--n:2" role="img" aria-label="Buquê de flores"></svg>
+</div></div></div>
+
+<div class="zoom" id="zoom"><img alt=""></div>
+
+<script>
+/* ===== CONFIGURE AQUI: links do Spotify (as playlists precisam estar públicas) ===== */
+const SPOTIFY = {
+  p1: 'https://open.spotify.com/playlist/7e8PMWBMmZA5qWUAT3lDrA',
+  p3: 'https://open.spotify.com/playlist/0Perv8p6PEXSbuVBAsPgCr'
+};
+const embed = u => u.replace('open.spotify.com/','open.spotify.com/embed/').split('?')[0] + '?utm_source=generator&theme=0';
+
+/* ===== presentes: papel de presente liso, fita e laço ===== */
+const cores=[['#5e3a86','#3b1f52','#f1e8da'],['#1f4d3a','#123326','#c9b3e6'],['#c9b3e6','#9a7cc4','#1f4d3a'],['#7fae94','#5a8f76','#3b1f52']];
+document.querySelectorAll('.presente').forEach((b,k)=>{
+  const [c1,c2,f]=cores[k], id='p'+k;
+  b.innerHTML=`<svg viewBox="0 0 120 120">
+  <defs><pattern id="${id}" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.4" fill="${f}" opacity=".35"/><circle cx="9" cy="9" r="1.4" fill="${f}" opacity=".35"/></pattern></defs>
+  <rect x="20" y="54" width="80" height="56" rx="3" fill="${c1}"/><rect x="20" y="54" width="80" height="56" rx="3" fill="url(#${id})"/>
+  <rect x="54" y="54" width="12" height="56" fill="${f}"/>
+  <g class="tampa">
+    <rect x="13" y="36" width="94" height="22" rx="3" fill="${c2}"/><rect x="13" y="36" width="94" height="22" rx="3" fill="url(#${id})"/>
+    <rect x="54" y="36" width="12" height="22" fill="${f}"/>
+    <path d="M60 36C46 8 20 16 30 36Z" fill="${f}"/><path d="M60 36C74 8 100 16 90 36Z" fill="${f}"/>
+    <path d="M58 34C48 18 36 21 39 34Z" fill="${c2}" opacity=".45"/><path d="M62 34C72 18 84 21 81 34Z" fill="${c2}" opacity=".45"/>
+    <rect x="53" y="30" width="14" height="12" rx="3" fill="${f}" stroke="${c2}" stroke-opacity=".5" stroke-width="1.5"/>
+  </g></svg>`;
+});
+
+/* ===== fotos: colagem inclinada, mas alinhada em grade =====
+   Coloque as fotos na pasta "fotos" com os nomes 1.jpg, 2.jpg ... 17.jpg (também aceita .jpeg, .png e .webp) */
+const rot=[-5,3,-2,6,-4,2,-6,4,-3,5], desl=[0,14,6,-8,10,-4,12,2,-6,8];
+const TOTAL_FOTOS=17, EXT=['jpg','jpeg','png','webp','JPG','JPEG','PNG'];
+const fotos=document.getElementById('fotos'), zoom=document.getElementById('zoom');
+for(let i=1;i<=TOTAL_FOTOS;i++){
+  const f=document.createElement('figure');f.className='foto';
+  f.style.cssText=`--r:${rot[(i-1)%rot.length]}deg;--y:${desl[(i-1)%desl.length]}px;--k:${i}`;
+  const im=new Image();let e=0;
+  im.onerror=()=>{if(++e<EXT.length)im.src='fotos/'+i+'.'+EXT[e]};
+  im.src='fotos/'+i+'.'+EXT[0];im.alt='foto '+i;im.loading='lazy';
+  f.appendChild(im);
+  f.onclick=()=>{zoom.querySelector('img').src=im.src;zoom.classList.add('aberta')};
+  fotos.appendChild(f);
+}
+zoom.onclick=()=>zoom.classList.remove('aberta');
+
+/* ===== cartinha: a folha fica dentro do envelope e se desdobra ===== */
+const carta=document.getElementById('carta'), fonte=document.getElementById('cartaTexto');
+function preparaCarta(){
+  const W=Math.max(200,Math.min(440,carta.clientWidth-60));
+  const m=document.createElement('div');m.className='texto medida';m.style.width=W+'px';m.innerHTML='<div>'+fonte.innerHTML+'</div>';
+  carta.appendChild(m);
+  const h=Math.max(115,Math.ceil(m.offsetHeight/2));m.remove();
+  carta.style.setProperty('--W',W+'px');carta.style.setProperty('--EW',(W+56)+'px');carta.style.setProperty('--h',h+'px');carta.style.setProperty('--H',(3*h)+'px');
+  carta.querySelectorAll('.tx').forEach(t=>t.innerHTML='<div>'+fonte.innerHTML+'</div>');
+}
+const abreCarta=()=>{if(carta.classList.contains('open'))return;preparaCarta();carta.classList.add('open');setTimeout(()=>carta.classList.add('fora'),1600)};
+carta.onclick=abreCarta;
+carta.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();abreCarta()}};
+
+/* ===== buquê de lírios interativo: passe o mouse, toque nas flores, clique nos botões ===== */
+(function(){
+  const svg=document.getElementById('buque');
+  const K='#f1e8da',L='#c9b3e6',M='#d7a5cf';
+  const cor={'#f1e8da':['k','#dcc6ec','#b494d6'],'#c9b3e6':['l','#a98bd8','#7a4fb8'],'#d7a5cf':['m','#c283b8','#9a5a94']};
+  const defs='<defs>'+Object.values(cor).map(([n,tip])=>`<linearGradient id="gr-${n}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e2efc0"/><stop offset=".3" stop-color="${n==='k'?K:n==='l'?L:M}"/><stop offset="1" stop-color="${tip}"/></linearGradient>`).join('')+'</defs>';
+  const lirio=(l,c,sy)=>{
+    const [n,tip,v]=cor[c],w=l*.36;
+    const petala=(ang,extra)=>`<g transform="rotate(${ang})"><path d="M0 0C${w} ${-l*.25} ${w*.85} ${-l*.78} 0 ${-l}C${-w*.85} ${-l*.78} ${-w} ${-l*.25} 0 0Z" fill="url(#gr-${n})" stroke="#3b1f52" stroke-opacity=".32" stroke-width="1.6" stroke-linejoin="round"/>${extra}<path d="M0 ${-l*.06}L0 ${-l*.84}" stroke="${v}" stroke-width="2" stroke-linecap="round" opacity=".75"/><path d="M${-w*.42} ${-l*.2}Q${-w*.3} ${-l*.55} 0 ${-l*.9}M${w*.42} ${-l*.2}Q${w*.3} ${-l*.55} 0 ${-l*.9}" fill="none" stroke="${v}" stroke-width="1" opacity=".35"/><circle cx="${-l*.07}" cy="${-l*.36}" r="1.7" fill="${v}"/><circle cx="${l*.08}" cy="${-l*.46}" r="1.7" fill="${v}"/><circle cx="${-l*.05}" cy="${-l*.58}" r="1.7" fill="${v}"/><circle cx="${l*.05}" cy="${-l*.3}" r="1.5" fill="${v}"/></g>`;
+    let s='';
+    [0,120,240].forEach(a=>s+=petala(a,''));
+    [60,180,300].forEach(a=>s+=petala(a,`<path d="M${-w*.5} ${-l*.3}C${-w*.2} ${-l*.62} ${w*.2} ${-l*.62} ${w*.5} ${-l*.3}L0 ${-l*.05}Z" fill="#fff" fill-opacity=".24"/>`));
+    for(let i=0;i<6;i++){
+      const a=(i*60+20)*Math.PI/180,r=l*(.52+(i%2)*.09),x=Math.sin(a)*r,y=-Math.cos(a)*r;
+      s+=`<line x2="${x}" y2="${y}" stroke="#7a4fb8" stroke-width="1.5"/><ellipse cx="${x}" cy="${y}" rx="2.5" ry="5.2" transform="rotate(${i*60+20} ${x} ${y})" fill="#3b1f52"/><circle cx="${x}" cy="${y}" r="1.7" fill="#e8b64a"/>`;
+    }
+    return `<g transform="scale(1 ${sy})">${s}<circle r="${l*.1}" fill="#cfe3a4"/><circle r="${l*.05}" fill="#8fbf8a"/></g>`;
+  };
+  const botao=(l,c)=>{const [n,,v]=cor[c];return `<path d="M0 0C${l*.24} ${-l*.25} ${l*.2} ${-l*.75} 0 ${-l}C${-l*.2} ${-l*.75} ${-l*.24} ${-l*.25} 0 0Z" fill="url(#gr-${n})" stroke="#3b1f52" stroke-opacity=".32" stroke-width="1.6"/><path d="M0 ${-l*.05}L0 ${-l*.9}" stroke="${v}" stroke-width="1.6" opacity=".7"/><path d="M0 0C${l*.16} ${-l*.15} ${l*.15} ${-l*.45} 0 ${-l*.62}C${-l*.15} ${-l*.45} ${-l*.16} ${-l*.15} 0 0Z" fill="#7fae94" fill-opacity=".55"/>`};
+  // x, y, tamanho, tipo (l = lírio aberto, b = botão que abre ao clicar), cor, giro, achatamento, balanço
+  const flores=[[200,100,54,'l',K,8,1,0],[126,142,50,'l',L,-14,.92,-4],[274,140,50,'l',M,18,.92,4],[58,168,46,'b',K,-38,1,-8],[342,164,46,'b',L,38,1,8],[80,214,44,'l',K,-28,.88,-7],[320,212,44,'l',L,32,.88,7],[168,198,48,'l',M,-6,.94,-2],[234,196,48,'l',K,20,.94,2],[200,262,42,'l',L,-12,.9,0]];
+  const folha=(ang,len,w,c)=>`<g class="folha" style="--a:${ang/10}"><path transform="translate(200 340) rotate(${ang})" d="M0 0C${w} ${-len*.3} ${w*.6} ${-len*.75} 0 ${-len}C${-w*.6} ${-len*.75} ${-w} ${-len*.3} 0 0Z" fill="${c}"/><path transform="translate(200 340) rotate(${ang})" d="M0 -6L0 ${-len*.85}" stroke="#123326" stroke-opacity=".35" stroke-width="2" fill="none"/></g>`;
+  const borboleta='<g id="borb"><g class="voo"><g class="asaE"><path d="M-1 -1C-10 -17 -29 -15 -25 -3C-23 3 -8 3 -1 -1Z" fill="#f1e8da" stroke="#3b1f52" stroke-width="1.4"/><path d="M-1 1C-8 13 -21 15 -19 6C-18 2 -8 0 -1 1Z" fill="#c9b3e6" stroke="#3b1f52" stroke-width="1.4"/><circle cx="-15" cy="-6" r="3" fill="#8a5cc4"/></g><g class="asaD"><path d="M1 -1C10 -17 29 -15 25 -3C23 3 8 3 1 -1Z" fill="#f1e8da" stroke="#3b1f52" stroke-width="1.4"/><path d="M1 1C8 13 21 15 19 6C18 2 8 0 1 1Z" fill="#c9b3e6" stroke="#3b1f52" stroke-width="1.4"/><circle cx="15" cy="-6" r="3" fill="#8a5cc4"/></g><ellipse rx="1.8" ry="8" fill="#3b1f52"/><path d="M-1 -7Q-5 -14 -8 -13M1 -7Q5 -14 8 -13" fill="none" stroke="#3b1f52" stroke-width="1.2"/></g></g>';
+
+  function monta(){
+    let h=defs+'<g class="inc" style="--w:2">'+[[-62,190,22,'#1f4d3a'],[62,190,22,'#2f6b52'],[-40,225,20,'#2f6b52'],[40,225,20,'#1f4d3a'],[-18,240,18,'#3f8a67'],[18,240,18,'#2f6b52']].map(a=>folha(...a)).join('')+'</g>';
+    flores.forEach(([x,y,l,t,c,rot,sy,a],k)=>{
+      h+=`<g class="inc" style="--w:${((340-y)/45).toFixed(1)}"><g class="flor" style="--a:${a};--k:${k}"><path class="talo" pathLength="1" d="M200 340Q${(200+x)/2} ${(340+y)/2+22} ${x} ${y}"/><g transform="translate(${x} ${y}) rotate(${rot})"><g class="cabeca"><g class="giro">${t==='l'?lirio(l,c,sy):botao(l,c)}</g></g></g></g></g>`;
+    });
+    h+='<g class="embrulho"><path d="M84 284L316 284L204 458L196 458Z" fill="#f1e8da" stroke="#f1e8da" stroke-width="8" stroke-linejoin="round"/><path d="M84 284L200 314L200 458L196 458Z" fill="#c9b3e6" stroke="#c9b3e6" stroke-width="8" stroke-linejoin="round"/><path d="M316 284L200 314L200 458L204 458Z" fill="#e4d9c7" stroke="#e4d9c7" stroke-width="8" stroke-linejoin="round"/><path d="M200 314L200 458" stroke="#3b1f52" stroke-opacity=".22" stroke-width="2"/><path d="M129 352L271 352L265 368L135 368Z" fill="#1f4d3a"/><path d="M196 362L176 402L190 397L200 366Z" fill="#1f4d3a"/><path d="M204 362L224 402L210 397L200 366Z" fill="#1f4d3a"/><path d="M200 356C170 326 144 340 158 358C170 372 190 364 200 356Z" fill="#2f6b52"/><path d="M200 356C230 326 256 340 242 358C230 372 210 364 200 356Z" fill="#2f6b52"/><circle cx="200" cy="357" r="8" fill="#1f4d3a"/></g><g id="petalas"></g>'+borboleta;
+    svg.innerHTML=h;
+    const petalas=svg.querySelector('#petalas'), borb=svg.querySelector('#borb');
+    const voa=(x,y)=>{borb.style.transform=`translate(${x}px,${y}px)`};
+    voa(338,64);
+    const aberto=flores.map(f=>f[3]==='l');
+    svg.querySelectorAll('.flor').forEach((f,k)=>{
+      const [x,y,l,,c]=flores[k];
+      const g=f.querySelector('.giro');
+      f.addEventListener('pointerenter',()=>voa(x+l*.5,y-l*.55)); // a borboleta pousa na flor
+      f.addEventListener('click',()=>{
+        if(!aberto[k]){ // botão: abre virando lírio
+          aberto[k]=true;g.innerHTML=lirio(l*1.05,c,.92);g.classList.remove('brota');void g.getBoundingClientRect();g.classList.add('brota');
+        }else{
+          g.classList.remove('pulsa');void g.getBoundingClientRect();g.classList.add('pulsa');
+        }
+        for(let i=0;i<9;i++){
+          const p=document.createElementNS('http://www.w3.org/2000/svg','ellipse');
+          p.setAttribute('cx',x);p.setAttribute('cy',y);p.setAttribute('rx',l*.1);p.setAttribute('ry',l*.22);p.setAttribute('fill',c);p.setAttribute('class','petala');
+          p.style.setProperty('--dx',(Math.random()*180-90)+'px');p.style.setProperty('--dy',(60+Math.random()*150)+'px');p.style.setProperty('--rot',(Math.random()*540-270)+'deg');
+          petalas.appendChild(p);setTimeout(()=>p.remove(),1600);
+        }
+      });
+    });
+  }
+  // o buquê inteiro se inclina na direção do mouse/dedo
+  svg.addEventListener('pointermove',e=>{const r=svg.getBoundingClientRect();svg.style.setProperty('--lean',(((e.clientX-r.left)/r.width-.5)*2).toFixed(2))});
+  svg.addEventListener('pointerleave',()=>svg.style.setProperty('--lean',0));
+  window.montaBuque=monta;monta();
+})();
+
+/* ===== abrir e fechar: depois de aberto o presente escurece, mas dá pra abrir de novo ===== */
+document.querySelectorAll('.presente').forEach(p=>{
+  const tela=document.getElementById(p.dataset.alvo);
+  p.onclick=()=>{
+    if(tela.id==='t3')carta.classList.remove('open','fora'); // a carta abre de novo com a animação
+    tela.querySelectorAll('iframe[data-spotify]').forEach(fr=>{fr.src=embed(SPOTIFY[fr.dataset.spotify])});
+    if(tela.id==='t4'&&window.montaBuque)window.montaBuque();
+    tela.classList.add('aberta');
+  };
+  tela.querySelector('.fechar').onclick=()=>{
+    tela.classList.remove('aberta');
+    tela.querySelectorAll('iframe').forEach(fr=>fr.removeAttribute('src')); // para a música
+    p.classList.add('visto');
+    try{localStorage.setItem('visto_'+p.dataset.alvo,'1')}catch(e){}
+  };
+  try{if(localStorage.getItem('visto_'+p.dataset.alvo))p.classList.add('visto')}catch(e){}
+});
+</script>
+</body>
+</html>
